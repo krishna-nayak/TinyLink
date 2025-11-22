@@ -82,36 +82,6 @@ app.get("/healthz", async (req, res) => {
   }
 });
 
-// Form-based create endpoint for server-rendered dashboard (redirects back)
-app.post("/links", async (req, res) => {
-  try {
-    const { url, short_key } = req.body || {};
-    let key = short_key && short_key.trim() ? short_key.trim() : undefined;
-    if (key) {
-      const existing = await Link.findOne({ where: { short_key: key } });
-      if (existing) return res.redirect("/?error=key_taken");
-    } else {
-      // generate quick key
-      const generateKey = (len = 6) => {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        let out = "";
-        for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
-        return out;
-      };
-      let attempts = 0;
-      do {
-        key = generateKey(6);
-        attempts += 1;
-      } while ((await Link.findOne({ where: { short_key: key } })) && attempts < 5);
-    }
-    await Link.create({ short_key: key, url });
-    return res.redirect("/");
-  } catch (err) {
-    console.error("Create via form failed:", err && err.message);
-    return res.redirect("/?error=server");
-  }
-});
-
 // Create a new short link
 app.post("/api/links", async (req, res) => {
   try {
