@@ -86,6 +86,9 @@ body {
   align-items: center;
   margin-bottom: 12px;
 }
+.controls > * {
+  min-width: 0; /* allow children to shrink properly in flex containers */
+}
 .controls input {
   flex: 1;
   padding: 8px;
@@ -106,6 +109,23 @@ body {
   border-bottom: 1px dashed #eef2f7;
   text-align: left;
   vertical-align: middle;
+}
+
+/* Scrollable table wrapper with sticky header */
+.table-wrapper {
+  max-height: 55vh; /* keep table usable on small screens */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* momentum scrolling on iOS */
+  scroll-behavior: smooth; /* smooth scroll when programmatically moving */
+  border-radius: 8px;
+  background: transparent;
+}
+
+.links-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 2;
 }
 .links-table td.url {
   max-width: 420px;
@@ -133,12 +153,42 @@ body {
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* Keep action buttons on a single row, avoid wrapping in narrow cells */
+.actions {
+  display: inline-flex; /* allow flexible spacing but respect table cell flow */
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap; /* prevent buttons from wrapping to the next line */
+}
+.actions form {
+  margin: 0;
+}
+.actions button {
+  margin: 0;
+}
+.actions .copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 @media (max-width: 640px) {
   .form-row {
     flex-direction: column;
   }
   .controls {
     flex-direction: column;
+  }
+  /* make controls full width on small screens */
+  .controls input,
+  .controls select,
+  .control-input,
+  .control-select {
+    width: 100%;
+    flex: none;
+  }
+  .controls select {
+    margin-top: 8px;
   }
   .links-table th:nth-child(4),
   .links-table td:nth-child(4) {

@@ -3,13 +3,14 @@ const copyButtons = document.querySelectorAll(".copy-btn");
 copyButtons.forEach((btn) => {
   btn.addEventListener("click", async (e) => {
     const key = btn.dataset.key;
+    const prev = btn.innerHTML;
     try {
       await navigator.clipboard.writeText(window.location.origin + "/" + key);
-      const prev = btn.textContent;
-      btn.textContent = "Copied";
-      setTimeout(() => (btn.textContent = prev), 1200);
+      btn.innerHTML = `<i class="fa-solid fa-copy"></i>`;
+      setTimeout(() => (btn.innerHTML = prev), 1200);
     } catch (err) {
-      alert("Copy failed");
+      alert("Copy failed: " + (err && err.message ? err.message : ""));
+      btn.innerHTML = prev;
     }
   });
 });
@@ -45,8 +46,8 @@ if (filterInput && sortSelect && tableBody) {
     if (sort === "most") {
       visible.sort((a, b) => Number(b.dataset.stats || 0) - Number(a.dataset.stats || 0));
     } else if (sort === "old") {
-      visible.reverse(); // server already rendered newest-first, so reverse for old
-    } // 'new' is server order
+      visible.reverse();
+    }
 
     // re-append visible rows in order
     visible.forEach((r) => tableBody.appendChild(r));

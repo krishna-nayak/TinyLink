@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>TinyLink — Dashboard</title>
     <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
     <%- include('partials/header') %>
@@ -29,16 +36,9 @@
 
       <section class="card">
         <h2>Links</h2>
-        <div
-          class="controls"
-          style="margin-bottom: 12px; display: flex; gap: 8px; align-items: center"
-        >
-          <input
-            id="filter"
-            placeholder="Filter by url or key"
-            style="flex: 1; padding: 8px; border: 1px solid #e6e9ef; border-radius: 6px"
-          />
-          <select id="sort" style="padding: 8px; border-radius: 6px">
+        <div class="controls">
+          <input id="filter" placeholder="Filter by url or key" class="control-input" />
+          <select id="sort" class="control-select">
             <option value="new">Newest</option>
             <option value="old">Oldest</option>
             <option value="most">Most clicks</option>
