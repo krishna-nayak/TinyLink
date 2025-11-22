@@ -125,15 +125,6 @@ Import it into Postman and set the `baseUrl` collection variable (default `http:
 - The table in the dashboard is wrapped in a scrollable container with a sticky header for better UX on small screens.
 - Minimal client JS is in `public/js/dashboard.js` (copy-to-clipboard and client-side filter/sort).
 
-## Troubleshooting
-
-- Server exits with DB connection errors: verify `DATABASE_URL` and Postgres is reachable.
-- Port already in use: change `port` in `src/index.js` or set `PORT` environment variable and adapt `src/index.js` accordingly.
-- For production:
-
-  1. Replace `sequelize.sync()` with tracked migrations.
-  1. Add proper input validation, rate limiting, and authentication if needed.
-
 ## Privacy / security notes
 
 - The stats endpoint currently returns the target `url`. If you want to keep target URLs private, remove `url` from the `/api/links/:code` response.
