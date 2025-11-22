@@ -1,4 +1,4 @@
-import sequelize from "./db.js";
+import sequelize from "./config/db.js";
 import express from "express";
 import Link from "./models/Links.js";
 
