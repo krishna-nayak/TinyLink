@@ -1,0 +1,20 @@
+{
+  "name": "tinylink",
+  "version": "1.0.0",
+  "description": "Build a small web app similar to bit.ly, where users can shorten URLs, view click statistics, and manage",
+  "license": "ISC",
+  "author": "Krishna Nayak",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7"
+  }
+}
