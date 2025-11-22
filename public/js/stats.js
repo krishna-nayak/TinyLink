@@ -17,13 +17,9 @@
   }
 
   try {
-    const res = await fetch("/api/links");
+    const res = await fetch(`/api/links/${code}`);
     if (!res.ok) throw new Error("Failed");
-    const list = await res.json();
-    const link = list.find((l) => l.short_key === code);
-    if (!link) {
-      throw new Error("not found");
-    }
+    const link = await res.json();
     keyEl.textContent = link.short_key;
     urlEl.textContent = link.url;
     urlEl.href = link.url;
