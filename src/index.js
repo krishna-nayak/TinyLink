@@ -89,14 +89,24 @@ app.get("/code/:code", (req, res) => {
 app.get("/healthz", async (req, res) => {
   try {
     await sequelize.authenticate();
-    const ctx = { status: "ok", db: "ok", version: "1.0" };
-    if (req.accepts("html")) return res.status(200).render("healthz", ctx);
-    return res.status(200).json({ ok: true, version: "1.0" });
+    // Always return JSON for health checks
+    return res.status(200).json({ ok: true, db: "ok", version: "1.0" });
   } catch (err) {
     console.error("Health check failed:", err && err.message);
+    return res.status(500).json({ ok: false, db: "down", version: "1.0" });
+  }
+});
+
+// Human-facing health page (HTML)
+app.get("/healthz.html", async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    const ctx = { status: "ok", db: "ok", version: "1.0" };
+    return res.status(200).render("healthz", ctx);
+  } catch (err) {
+    console.error("Health page failed:", err && err.message);
     const ctx = { status: "fail", db: "down", version: "1.0" };
-    if (req.accepts("html")) return res.status(500).render("healthz", ctx);
-    return res.status(500).json({ ok: false, version: "1.0", db: "down" });
+    return res.status(500).render("healthz", ctx);
   }
 });
 
@@ -159,8 +169,24 @@ app.get("/api/links", async (req, res) => {
   }
 });
 
-// Get link by code and increment stats
+// Get stats for a single short code
 app.get("/api/links/:code", async (req, res) => {
+  try {
+    const { code } = req.params;
+    const link = await Link.findOne({ where: { short_key: code } });
+    if (!link) return res.status(404).json({ error: "not_found" });
+
+    // Return a stats-focused payload
+    const { short_key, url, stats, last_clicked_time, createdAt, updatedAt } = link;
+    return res.json({ short_key, url, stats, last_clicked_time, createdAt, updatedAt });
+  } catch (err) {
+    console.error("Get link stats failed:", err && err.message);
+    return res.status(500).json({ error: "internal_server_error" });
+  }
+});
+
+// Get link by code and increment stats
+app.get("/:code", async (req, res) => {
   try {
     const { code } = req.params;
     const link = await Link.findOne({ where: { short_key: code } });

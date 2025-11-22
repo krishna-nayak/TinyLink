@@ -16,7 +16,7 @@
       </tr>
       <% } else { %> <% links.forEach(function(l){ %>
       <tr data-key="<%= l.short_key %>" data-url="<%= l.url %>" data-stats="<%= l.stats || 0 %>">
-        <td><a href="/<%= l.short_key %>"><%= l.short_key %></a></td>
+        <td><a href="/code/<%= l.short_key %>"><%= l.short_key %></a></td>
         <td class="url">
           <a href="<%= l.url %>" target="_blank" rel="noopener"
             ><%= l.url.length>80 ? l.url.substring(0,77)+"..." : l.url %></a
