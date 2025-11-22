@@ -1,0 +1,40 @@
+<table id="links-table" class="links-table" aria-live="polite">
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>URL</th>
+      <th>Clicks</th>
+      <th>Last Click</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (!links || links.length === 0) { %>
+    <tr>
+      <td colspan="5" class="small">No links yet — create one above.</td>
+    </tr>
+    <% } else { %> <% links.forEach(function(l){ %>
+    <tr data-key="<%= l.short_key %>" data-url="<%= l.url %>" data-stats="<%= l.stats || 0 %>">
+      <td><a href="/<%= l.short_key %>"><%= l.short_key %></a></td>
+      <td class="url">
+        <a href="<%= l.url %>" target="_blank" rel="noopener"
+          ><%= l.url.length>80 ? l.url.substring(0,77)+"..." : l.url %></a
+        >
+      </td>
+      <td class="small"><%= l.stats || 0 %></td>
+      <td class="small">
+        <%= l.last_clicked_time ? new Date(l.last_clicked_time).toLocaleString() : '-' %>
+      </td>
+      <td class="actions">
+        <form method="post" action="/links/delete" style="display: inline">
+          <input type="hidden" name="key" value="<%= l.short_key %>" />
+          <button type="submit" onclick="return confirm('Delete <%= l.short_key %>?')">
+            Delete
+          </button>
+        </form>
+        <button class="copy-btn" data-key="<%= l.short_key %>">Copy</button>
+      </td>
+    </tr>
+    <% }) %> <% } %>
+  </tbody>
+</table>

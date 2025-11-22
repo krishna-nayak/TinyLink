@@ -1,0 +1,11 @@
+<div class="controls">
+  <form id="search-form" method="get" action="/">
+    <input name="q" id="filter" placeholder="Filter by url or key" value="<%= typeof q !== 'undefined' ? q : '' %>" />
+    <select name="sort" id="sort">
+      <option value="new" <%= (sort==='new')? 'selected' : '' %>>Newest</option>
+      <option value="old" <%= (sort==='old')? 'selected' : '' %>>Oldest</option>
+      <option value="most" <%= (sort==='most')? 'selected' : '' %>>Most clicks</option>
+    </select>
+    <button type="submit">Apply</button>
+  </form>
+</div>

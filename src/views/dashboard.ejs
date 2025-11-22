@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TinyLink — Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+
+    <main class="container">
+      <section class="card">
+        <h2>Create a short link</h2>
+        <form id="create-form" class="form-row" method="post" action="/links">
+          <input
+            id="url-input"
+            name="url"
+            type="url"
+            placeholder="https://example.com"
+            required
+            autocomplete="off"
+          />
+          <input id="custom-key" name="short_key" type="text" placeholder="optional custom key" />
+          <button id="create-btn" type="submit">Create</button>
+        </form>
+        <p id="form-message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="card">
+        <h2>Links</h2>
+        <div
+          class="controls"
+          style="margin-bottom: 12px; display: flex; gap: 8px; align-items: center"
+        >
+          <input
+            id="filter"
+            placeholder="Filter by url or key"
+            style="flex: 1; padding: 8px; border: 1px solid #e6e9ef; border-radius: 6px"
+          />
+          <select id="sort" style="padding: 8px; border-radius: 6px">
+            <option value="new">Newest</option>
+            <option value="old">Oldest</option>
+            <option value="most">Most clicks</option>
+          </select>
+        </div>
+        <%- include('partials/table', { links: links }) %>
+      </section>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/js/dashboard.js" defer></script>
+  </body>
+</html>

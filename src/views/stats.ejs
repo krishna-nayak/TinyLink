@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TinyLink — Stats <%= code %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <main class="container">
+      <section class="card">
+        <h2>Stats for <code><%= code %></code></h2>
+        <div id="stats-loading" class="loading">Loading...</div>
+        <div id="stats-error" class="message error hidden"></div>
+        <div id="stats" class="hidden">
+          <p><strong>Short Key:</strong> <span id="stat-key"></span></p>
+          <p><strong>URL:</strong> <a id="stat-url" href="#" target="_blank" rel="noopener"></a></p>
+          <p><strong>Clicks:</strong> <span id="stat-clicks"></span></p>
+          <p><strong>Last Click:</strong> <span id="stat-last"></span></p>
+          <p>
+            <button id="open-short">Open Short URL</button>
+          </p>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+    <script>
+      window.TINYLINK_CODE = "<%= code %>";
+    </script>
+    <script src="/js/stats.js" defer></script>
+  </body>
+</html>
