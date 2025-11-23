@@ -31,6 +31,37 @@ app.get("/", (req, res) => {
   })();
 });
 
+// Human-facing health page (HTML)
+app.get("/healthz.html", async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    const ctx = { status: "ok", db: "ok", version: "1.0" };
+    return res.status(200).render("healthz", ctx);
+  } catch (err) {
+    console.error("Health page failed:", err && err.message);
+    const ctx = { status: "fail", db: "down", version: "1.0" };
+    return res.status(500).render("healthz", ctx);
+  }
+});
+
+// Stats page (UI) for a single code
+app.get("/code/:code", (req, res) => {
+  const { code } = req.params;
+  res.render("stats", { code });
+});
+
+// Health check endpoint
+app.get("/healthz", async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    // Always return JSON for health checks
+    return res.status(200).json({ ok: true, db: "ok", version: "1.0" });
+  } catch (err) {
+    console.error("Health check failed:", err && err.message);
+    return res.status(500).json({ ok: false, db: "down", version: "1.0" });
+  }
+});
+
 // Get link by code and increment stats
 app.get("/:code", async (req, res) => {
   try {
@@ -48,37 +79,6 @@ app.get("/:code", async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "internal_server_error" });
-  }
-});
-
-// Stats page (UI) for a single code
-app.get("/code/:code", (req, res) => {
-  const { code } = req.params;
-  res.render("stats", { code });
-});
-
-// Human-facing health page (HTML)
-app.get("/healthz.html", async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    const ctx = { status: "ok", db: "ok", version: "1.0" };
-    return res.status(200).render("healthz", ctx);
-  } catch (err) {
-    console.error("Health page failed:", err && err.message);
-    const ctx = { status: "fail", db: "down", version: "1.0" };
-    return res.status(500).render("healthz", ctx);
-  }
-});
-
-// Health check endpoint
-app.get("/healthz", async (req, res) => {
-  try {
-    await sequelize.authenticate();
-    // Always return JSON for health checks
-    return res.status(200).json({ ok: true, db: "ok", version: "1.0" });
-  } catch (err) {
-    console.error("Health check failed:", err && err.message);
-    return res.status(500).json({ ok: false, db: "down", version: "1.0" });
   }
 });
 
@@ -122,6 +122,12 @@ app.post("/api/links", async (req, res) => {
     }
 
     const created = await Link.create({ short_key: key, url });
+
+    // If the client accepts HTML (e.g. a browser form submit), redirect back
+    // to the dashboard so non-JS users get a friendly page instead of raw JSON.
+    if (req.accepts && req.accepts("html")) {
+      return res.redirect(303, "/");
+    }
 
     return res.status(201).json(created);
   } catch (err) {

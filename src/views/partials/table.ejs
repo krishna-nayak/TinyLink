@@ -27,12 +27,15 @@
           <%= l.last_clicked_time ? new Date(l.last_clicked_time).toLocaleString() : '-' %>
         </td>
         <td class="actions">
-          <form method="post" action="/links/delete" style="display: inline">
-            <input type="hidden" name="key" value="<%= l.short_key %>" />
-            <button type="submit" onclick="return confirm('Delete <%= l.short_key %>?')">
-              Delete
-            </button>
-          </form>
+          <button
+            type="button"
+            class="delete-btn"
+            data-key="<%= l.short_key %>"
+            title="Delete"
+            aria-label="Delete <%= l.short_key %>"
+          >
+            Delete
+          </button>
           <button
             class="copy-btn"
             data-key="<%= l.short_key %>"
