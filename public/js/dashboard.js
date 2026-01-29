@@ -184,14 +184,34 @@ if (createForm) {
     const payload = { url };
     if (keyInput && keyInput.value.trim()) payload.short_key = keyInput.value.trim();
     try {
-      const res = await postJson("/api/links", payload);
-      if (!res.ok) {
-        if (msgEl)
-          msgEl.textContent =
-            res.body && res.body.error ? `Error: ${res.body.error}` : `Error: ${res.statusText}`;
+      const res = await fetch("/api/links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      // The server now redirects on success (303 See Other)
+      // The fetch will follow the redirect and return the GET / response
+      if (res.ok && res.url === window.location.origin + "/") {
+        // Page was redirected to dashboard - reload to see new link
+        window.location.href = "/";
         return;
       }
-      if (res.body) addRowToTable(res.body);
+
+      // For API clients, add the row manually
+      if (!res.ok) {
+        let body = null;
+        try {
+          body = await res.json();
+        } catch (e) {}
+        if (msgEl)
+          msgEl.textContent =
+            body && body.error ? `Error: ${body.error}` : `Error: ${res.statusText}`;
+        return;
+      }
+
+      const body = await res.json();
+      if (body) addRowToTable(body);
       createForm.reset();
       if (msgEl) msgEl.textContent = "Created.";
     } catch (err) {

@@ -3,6 +3,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import Link from "./models/Links.js";
+import { log } from "console";
 
 const app = express();
 const port = 3000;
@@ -123,12 +124,16 @@ app.post("/api/links", async (req, res) => {
 
     const created = await Link.create({ short_key: key, url });
 
-    // If the client accepts HTML (e.g. a browser form submit), redirect back
-    // to the dashboard so non-JS users get a friendly page instead of raw JSON.
-    if (req.accepts && req.accepts("html")) {
+    console.log("Created new short link:", created.short_key, "->", created.url);
+
+    // If the client accepts HTML (e.g. a traditional form submit), redirect back
+    // to the dashboard. Otherwise return JSON for API clients.
+    const acceptsHtml = req.accepts && req.accepts("html");
+    if (acceptsHtml) {
       return res.redirect(303, "/");
     }
 
+    console.log("Created new short link:", created.short_key, "->", created.url);
     return res.status(201).json(created);
   } catch (err) {
     console.error(err);
